@@ -8,7 +8,6 @@ const SYNC_BYTE = 0x47;
 const uniquePIDs = new Set();
 
 let numberOfPackets = 0;
-let offset = 0;
 let prevChunk;
 
 process.stdin.on('data', (chunk) => {
@@ -34,6 +33,8 @@ process.stdin.on('data', (chunk) => {
     const syncByte = packet[0];
 
     if (syncByte !== SYNC_BYTE) {
+      const offset = numberOfPackets * PACKET_SIZE_BYTES;
+
       console.error(
         `Error: No sync byte present in packet ${numberOfPackets}, offset ${offset}`
       );
@@ -46,7 +47,6 @@ process.stdin.on('data', (chunk) => {
     uniquePIDs.add(hexPID);
 
     numberOfPackets++;
-    offset += PACKET_SIZE_BYTES;
   }
 });
 
