@@ -14,6 +14,7 @@ let prevChunk;
 process.stdin.on('data', (chunk) => {
   if (prevChunk) {
     chunk = Buffer.concat([prevChunk, chunk]);
+    prevChunk = undefined;
   }
 
   for (let i = 0; i < chunk.length; i += PACKET_SIZE_BYTES) {
