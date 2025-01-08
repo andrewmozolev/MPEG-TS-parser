@@ -8,14 +8,14 @@ const SYNC_BYTE = 0x47;
 const uniquePIDs = new Set();
 
 let numberOfPackets = 0;
-let prevChunk;
+let leftoverBuffer;
 
 process.stdin.on('data', (chunk) => {
   let startIndex = 0;
 
-  if (prevChunk) {
-    chunk = Buffer.concat([prevChunk, chunk]);
-    prevChunk = undefined;
+  if (leftoverBuffer) {
+    chunk = Buffer.concat([leftoverBuffer, chunk]);
+    leftoverBuffer = undefined;
   }
 
   if (numberOfPackets === 0) {
@@ -54,7 +54,7 @@ process.stdin.on('data', (chunk) => {
         process.exit(1);
       }
 
-      prevChunk = chunk.subarray(i, chunk.length);
+      leftoverBuffer = chunk.subarray(i, chunk.length);
       break;
     }
 
